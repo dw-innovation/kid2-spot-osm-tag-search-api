@@ -12,4 +12,19 @@
 #--output_file datasets/osm/raw \
 #--fetch
 
-echo
+
+#echo merge knowledge graphs for constructing
+#
+#python -m code.osm_ops \
+#--input_file datasets/osm/raw \
+#--output_file datasets/osm/osm_kg.ttl \
+#--merge_kg
+
+
+echo create a custom OSM kg combining selected wikidata combination and osm combination
+python -m code.osm_ops \
+--wikidata_ref datasets/wikidata.tsv \
+--osm_ref datasets/osm/osm_kg.ttl \
+--mapping_ref datasets/osm_wikidata_mapping.tsv \
+--output_file datasets/osm/osm_enriched_kg.ttl \
+--create_kg
