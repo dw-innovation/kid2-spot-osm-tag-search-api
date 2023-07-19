@@ -2,6 +2,12 @@
 The repository contains the source code of the steps for the OSM semantic search engine.
 
 
+## Virtual Environment
+docker build -t op_semantic_engine:latest
+
+docker run -v $(pwd)/model:/app/model -p 8080:8080 op_semantic_engine:latest
+
+
 ## Source Collection
 
 Get the wiki ids of the OSM tags/keys from `[Wikidata](https://query.wikidata.org/)` and save the results as `wikidata.tsv`.

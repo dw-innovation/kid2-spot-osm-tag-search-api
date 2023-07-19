@@ -3,19 +3,10 @@ from rdflib.namespace import RDFS, OWL
 from rdflib.term import Literal
 from rdflib.plugins.sparql import prepareQuery
 
-# Namespaces
 WD = Namespace("https://wiki.openstreetmap.org/entity/")
 WDT = Namespace("https://wiki.openstreetmap.org/prop/direct/")
 SCHEMA = Namespace("http://schema.org/")
 WIKIDATA = Namespace("http://www.wikidata.org/entity/")
-
-g = Graph()
-g.parse("datasets/osm/osm_enriched_kg.ttl")
-
-g.bind("wd", WD)
-g.bind("wdt", WDT)
-g.bind("schema1", SCHEMA)
-
 
 def fetch_all_osm_tags(g: Graph):
     '''
@@ -60,7 +51,7 @@ def fetch_all_categories(g: Graph):
     return categories
 
 
-def fetch_tags_per_category(category: str):
+def fetch_tags_per_category(category: str, g: Graph):
     '''
     find the tags related to the category
     :param category:
@@ -103,7 +94,13 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
     :param g:
     :return: a dictionary containing properties of osm tag
     '''
-    subj = g.value(predicate=WDT["P19"], object=Literal(osm_tag))
+
+    if  'wiki.openstreetmap.org' in osm_tag:
+        subj = URIRef(osm_tag)
+    else:
+        subj = g.value(predicate=WDT["P19"], object=Literal(osm_tag))
+
+    osm_tag = fetch_english_name(g, subj)
 
     # fetch the group name
     group = g.value(subj, WDT["P25"])
@@ -144,7 +141,7 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
         obj_type = g.value(o, WDT["P2"])
         obj_type = g.value(obj_type, RDFS.label)
         combinations.append({'uri': str(o),
-                             'name': str(obj_name),
+                             'osm_tag': str(obj_name),
                              'type': str(obj_type)})
 
     # different from
@@ -155,7 +152,7 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
         obj_type = g.value(o, WDT["P2"])
         obj_type = g.value(obj_type, RDFS.label)
         different_tags.append({'uri': str(o),
-                               'name': str(obj_name),
+                               'osm_tag': str(obj_name),
                                'type': str(obj_type)})
 
     subj = str(subj)
@@ -188,6 +185,20 @@ def fetch_english_name(g, o):
             break
     return obj_name
 
+
+def fetch_wikidata_label(g, subj):
+    '''
+    fetch the label from wikidata
+    :param g:
+    :param o:
+    :return:
+    '''
+    if isinstance(subj, str):
+        subj = URIRef(subj)
+
+    wikidata_label = g.value(subj, OWL.sameAs)
+    wikidata_label = str(g.value(wikidata_label, RDFS.label))
+    return wikidata_label
 
 if __name__ == '__main__':
     # print(fetch_all_osm_tags(g))
