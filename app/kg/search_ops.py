@@ -2,6 +2,7 @@ from rdflib import Graph, Namespace, URIRef
 from rdflib.namespace import RDFS, OWL
 from rdflib.term import Literal
 from rdflib.plugins.sparql import prepareQuery
+from thefuzz import process, fuzz
 
 WD = Namespace("https://wiki.openstreetmap.org/entity/")
 WDT = Namespace("https://wiki.openstreetmap.org/prop/direct/")
@@ -130,8 +131,9 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
     applies_to_relations = str(g.value(applies_to_relations, RDFS.label))
 
     # wikidata label
-    wikidata_label = g.value(subj, OWL.sameAs)
-    wikidata_label = str(g.value(wikidata_label, RDFS.label))
+    wikidata_label = fetch_wikidata_label(g, subj)
+
+
 
     # combinations, usually properties
     combinations = []
@@ -195,10 +197,16 @@ def fetch_wikidata_label(g, subj):
     '''
     if isinstance(subj, str):
         subj = URIRef(subj)
+    # candidate wikidata label
+    candidate_labels = set()
+    for o in g.objects(subj, predicate=OWL.sameAs):
+        wikidata_label = str(g.value(o, RDFS.label))
+        candidate_labels.add(wikidata_label)
 
-    wikidata_label = g.value(subj, OWL.sameAs)
-    wikidata_label = str(g.value(wikidata_label, RDFS.label))
-    return wikidata_label
+    name = str(g.value(subj, WDT["P19"]))
+    match, _ = process.extract(name, list(candidate_labels), scorer=fuzz.token_set_ratio, limit=1)[0]
+
+    return match
 
 if __name__ == '__main__':
     # print(fetch_all_osm_tags(g))
