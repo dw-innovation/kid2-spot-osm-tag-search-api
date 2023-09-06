@@ -56,9 +56,15 @@ def map_to_osm(input_file, output_file):
     tag_ids = wikidata_samples["tagInfo"].unique()
     for tag_info in tqdm(tag_ids, total=len(tag_ids)):
         tag_info = re.sub(OSM_PREFIX_REGEX, '', tag_info)
-        response_data = request_osm_data(tag_info)
-        if response_data:
-            mapped_data.append(response_data)
+        try:
+            response_data = request_osm_mapping(tag_info)
+            if response_data:
+                mapped_data.append(response_data)
+            else:
+                print(f"Not response data found for {tag_info}")
+        except requests.exceptions.HTTPError as e:
+            print(f"Error found for {tag_info}: {e}")
+            continue
 
     mapped_data = pd.DataFrame(mapped_data)
     mapped_data.to_csv(output_file, sep='\t')
@@ -124,6 +130,8 @@ def create_kg(wikidata_ref, mapping_ref, osm_ref, output_file):
 
     merged_g.serialize(destination=output_file)
 
+def get_additional_values(key):
+    pass
 
 
 if __name__ == '__main__':

@@ -1,4 +1,8 @@
 from rdflib import Namespace, Graph
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def load_graph():
     # Namespaces
     WD = Namespace("https://wiki.openstreetmap.org/entity/")
@@ -7,7 +11,7 @@ def load_graph():
     WIKIDATA = Namespace("http://www.wikidata.org/entity/")
 
     g = Graph()
-    g.parse("model/osm_enriched_kg.ttl")
+    g.parse(os.getenv("OSM_KG"))
 
     g.bind("wd", WD)
     g.bind("wdt", WDT)

@@ -9,20 +9,29 @@ WDT = Namespace("https://wiki.openstreetmap.org/prop/direct/")
 SCHEMA = Namespace("http://schema.org/")
 WIKIDATA = Namespace("http://www.wikidata.org/entity/")
 
+
 def fetch_all_osm_tags(g: Graph):
     '''
     this function returns the uris of all osm tags
+    osm tags
     P2: instance of
     Q2: tag
     P19: permanent tag ID
+
+    osm keys
+    P2: instance of
+    Q7: tag
+    P16: permanent key ID
+    P19: permanent osm tag
+
     :param g:
     :return: list of {uri: , osm_tag: }
     '''
-    osm_tag_uri_pairs = []
-    for s, _, _ in g.triples((None, WDT["P2"], WD["Q2"])):
-        name = g.value(s, WDT["P19"])
-        osm_tag_uri_pairs.append({"uri": str(s),
-                                  "osm_tag": str(name)})
+    osm_tag_uri_pairs = set()
+
+    for s, _, n in g.triples((None, WDT["P19"], None)):
+        osm_tag_uri_pairs.add(str(s))
+
     return osm_tag_uri_pairs
 
 
@@ -96,7 +105,7 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
     :return: a dictionary containing properties of osm tag
     '''
 
-    if  'wiki.openstreetmap.org' in osm_tag:
+    if 'wiki.openstreetmap.org' in osm_tag:
         subj = URIRef(osm_tag)
     else:
         subj = g.value(predicate=WDT["P19"], object=Literal(osm_tag))
@@ -132,8 +141,6 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
 
     # wikidata label
     wikidata_label = fetch_wikidata_label(g, subj)
-
-
 
     # combinations, usually properties
     combinations = []
@@ -174,16 +181,52 @@ def fetch_tag_properties(osm_tag: str, g: Graph):
     }
 
 
-def fetch_english_name(g, o):
+def fetch_osm_tag(g, subj):
     '''
     fetch the english name of the object which might contain multiple names
     :param g:
     :param o:
     :return:
     '''
-    for _o in g.objects(o, RDFS.label):
-        if _o.language == 'en':
-            obj_name = str(_o)
+    if isinstance(subj, str):
+        subj = URIRef(subj)
+    obj_name = g.value(subj, WDT["P19"])
+
+    if not obj_name:
+        obj_name = g.value(subj, WDT["P16"])
+
+    return str(obj_name)
+
+
+def fetch_plain_name(osm_tag):
+    if "=" in osm_tag:
+        plain_name = osm_tag.split("=")[-1]
+        plain_name = plain_name.replace("_", " ")
+        return plain_name
+    elif ":" in osm_tag:
+        plain_name = osm_tag.split(":")[-1]
+        plain_name = plain_name.replace("_", " ")
+        return plain_name
+
+    plain_name = osm_tag
+    plain_name = plain_name.replace("_", " ")
+
+    return plain_name
+
+
+def fetch_english_name(g, subj):
+    '''
+    fetch the english name of the object which might contain multiple names
+    :param g:
+    :param o:
+    :return:
+    '''
+    if isinstance(subj, str):
+        subj = URIRef(subj)
+    obj_name = None
+    for o in g.objects(subj, RDFS.label):
+        if o.language == 'en':
+            obj_name = str(o)
             break
     return obj_name
 
@@ -207,6 +250,24 @@ def fetch_wikidata_label(g, subj):
     match, _ = process.extract(name, list(candidate_labels), scorer=fuzz.token_set_ratio, limit=1)[0]
 
     return match
+
+
+def fetch_description(g, subj):
+    '''
+    fetch the english name of the object which might contain multiple names
+    :param g:
+    :param o:
+    :return:
+    '''
+    if isinstance(subj, str):
+        subj = URIRef(subj)
+    description = None
+    for o in g.objects(subj, SCHEMA.description):
+        if o.language == 'en':
+            description = str(o)
+            break
+    return description
+
 
 if __name__ == '__main__':
     # print(fetch_all_osm_tags(g))

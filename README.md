@@ -5,8 +5,8 @@ The repository contains the source code of the steps for the OSM semantic search
 ## Virtual Environment
 
 ```
-docker build -t op_semantic_engine:latest
-docker run -dit -v $(pwd)/model:/app/model -p 80:8080 op_semantic_engine:latest
+docker build -t op_semantic_engine:latest .
+docker run -dit -v $(pwd)/model:/app/model -p 80:8080 --env-file .env op_semantic_engine:latest
 ```
 
 ## Source Collection
@@ -25,20 +25,24 @@ WHERE
 }
 ```
 
-Checkout `scripts/osm_ops.sh` to learn the steps of constructing custom kg.
+Checkout `scripts/osm_construct_ops.sh` to learn the steps of constructing custom kg.
 
 These steps are:
-- Mapping wikidata ids with osm ids
+- Mapping wikidata ids with osm ids 
+```shell
+python -m app.kg.construction_ops --map --input_file {INPUT_FILE} --output_file {OUTPUT_FILE}
+```
 - Fetching osm data for each osm id and save them into datasets/osm/raw
 
 ## Embeddings
 
-```
-conda create -n fasttext_embedding python=3.8
-conda activate fasttext_embedding
-```
-
+We currently use sentence transformers as text embeddings
 
 ## API Documentation
+
+### Clearing index
+
+`curl -X DELETE "[HOST]:9200/osm_tag?pretty"`
+
 
 Alternatively detail description can be found at [link](https://deutschewelle.sharepoint.com/:w:/t/GR-GR-ReCo-KID2/EWZ2XjKlDiNLhLMUBKYVqukBvTDFrbU4AS_Pmb6OE9eQpw?e=LH5fyj)
