@@ -1,3 +1,4 @@
+import os
 from rdflib import Namespace, Graph
 from dotenv import load_dotenv
 

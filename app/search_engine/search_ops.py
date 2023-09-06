@@ -1,9 +1,8 @@
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 from docarray.typing import NdArray
-from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
+from search_engine.utils import OSMTag, encode, load_model, connect_search_engine
 from docarray import BaseDoc
-from docarray.index.backends.weaviate import WeaviateDocumentIndex
 from pydantic import Field
 import pandas as pd
 import numpy as np
@@ -16,7 +15,8 @@ def search_osm_tag(word, model, search_engine, limit):
 
     q = (
         search_engine.build_query()
-        .find(q_embedding, search_field='embedding', limit=limit)
+        # .find(q_embedding, search_field='name_embedding', limit=limit)
+        .find(q_embedding, search_field='description_embedding', limit=limit)
         .text_search(word, search_field='name')
         .build()
     )

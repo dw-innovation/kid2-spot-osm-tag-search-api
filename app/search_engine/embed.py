@@ -28,10 +28,11 @@ for osm_tag in tqdm(osm_tags, total=len(osm_tags)):
     if not description:
         description = plain_name
 
-    embedding = encode(description, model)
+    description_embedding = encode(description, model)
+    name_embedding = encode(plain_name, model)
 
     processed_doc.append(
-        OSMTag(uri=osm_tag, text=description, embedding=embedding, osm_tag=osm_tag_name, name=plain_name))
+        OSMTag(uri=osm_tag, text=description, description_embedding=description_embedding, osm_tag=osm_tag_name, name_embedding=name_embedding, name=plain_name))
 
     if len(processed_doc) >= BATCH:
         doc_index.index(processed_doc)

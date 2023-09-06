@@ -15,7 +15,8 @@ class OSMTag(BaseDoc):
     osm_tag: str
     uri: str
     name: str
-    embedding: NdArray[384]
+    name_embedding: NdArray[384]
+    description_embedding: NdArray[384]
 
 
 def load_model():

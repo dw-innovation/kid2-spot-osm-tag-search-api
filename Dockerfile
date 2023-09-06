@@ -8,6 +8,9 @@ ARG PT_TORCHDATA_URL=https://download.pytorch.org/whl/test/torchdata-0.4.1-cp38-
 
 FROM ubuntu:20.04
 
+#ENV http_proxy=PROXY
+#ENV https_proxy=PROXY
+
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get autoremove -y \
