@@ -273,7 +273,7 @@ def fetch_descriptions(g, subj):
         return None
 
     descriptions = list(descriptions)
-    return sorted(descriptions, key=len, reverse=True)
+    return sorted(descriptions, key=len, reverse=True)[0]
 
 
 if __name__ == '__main__':

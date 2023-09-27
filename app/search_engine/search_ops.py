@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 from docarray.typing import NdArray
-from search_engine.utils import OSMTag, encode, load_model, connect_search_engine
+from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
 from docarray import BaseDoc
 from pydantic import Field
 import pandas as pd
@@ -16,8 +16,9 @@ def search_osm_tag(word, model, search_engine, limit):
     q = (
         search_engine.build_query()
         # .find(q_embedding, search_field='name_embedding', limit=limit)
-        .find(q_embedding, search_field='description_embedding', limit=limit)
-        .text_search(word, search_field='name')
+        .text_search(word, search_field='name', limit=limit)
+        .text_search(word, search_field='text', limit=limit)
+        # .find(q_embedding, search_field='description_embedding', limit=limit)
         .build()
     )
     docs, scores = search_engine.execute_query(q)

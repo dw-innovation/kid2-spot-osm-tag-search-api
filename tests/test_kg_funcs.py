@@ -71,12 +71,7 @@ class TestKGMethods(unittest.TestCase):
     def test_descriptions(self):
         test_tags = [{
             "osm_tag": WD["Q4819"],
-            "descriptions": [
-                'amenity=restaurantis applied to generally formal eating places with sit-down facilities selling full meals served by waiters and often licensed (where allowed) to sell alcoholic drinks.',
-                'If the restaurant and a hotel is the same add another point and the corresponding properties. (SeeOne feature, one OSM element)',
-                'Set anodeor draw as anareaalong the restaurant outline. Tag it withamenity=restaurantandname=*.',
-                'A restaurant sells full sit-down meals with servers, and may sell alcohol.', 'Rare combinations:',
-                'If applicable:', 'Recommended:', 'Optional:']
+            "descriptions": 'A restaurant sells full sit-down meals with servers, and may sell alcohol. amenity=restaurantis applied to generally formal eating places with sit-down facilities selling full meals served by waiters and often licensed (where allowed) to sell alcoholic drinks. Set anodeor draw as anareaalong the restaurant outline. Tag it withamenity=restaurantandname=*. Recommended: Optional: If applicable: Rare combinations: If the restaurant and a hotel is the same add another point and the corresponding properties. (SeeOne feature, one OSM element)'
 
         }]
 

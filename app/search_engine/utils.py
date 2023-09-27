@@ -27,7 +27,7 @@ def load_model():
 
 def connect_search_engine():
     return ElasticDocIndex[OSMTag](hosts=os.getenv("SEARCH_ENGINE_HOST"),
-                                   index_name="osm_tag")
+                                   index_name=os.getenv("SEARCH_ENGINE_INDEX"))
 
 
 def encode(text: str, model):

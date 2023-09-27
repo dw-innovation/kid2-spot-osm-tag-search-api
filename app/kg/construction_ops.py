@@ -5,6 +5,7 @@ from tqdm import tqdm
 from argparse import ArgumentParser
 from diskcache import Cache
 from rdflib import Graph, URIRef, Namespace
+from rdflib.graph import Collection
 from rdflib.term import Literal
 from rdflib.namespace import OWL, RDF, RDFS
 from pathlib import Path
@@ -187,8 +188,8 @@ def get_additional_values(input_file, output_file):
         wiki_descriptions = process_osm_wiki_description(wiki_description)
 
         if wiki_descriptions:
-            for wiki_description in wiki_descriptions:
-                g.add((s, SCHEMA.description, Literal(wiki_description, lang="en")))
+            wiki_descriptions = " ".join(description for description in wiki_descriptions)
+            g.add((s, SCHEMA.description, Literal(wiki_descriptions, lang="en")))
         else:
             print(f'{s} does not have a Wiki description')
 
