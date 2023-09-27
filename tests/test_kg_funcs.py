@@ -1,13 +1,15 @@
 import unittest
 import pandas as pd
 from app.kg.utils import load_graph
-from app.kg.search_ops import fetch_english_name
+from app.kg.search_ops import fetch_english_name, fetch_descriptions
 from rdflib import URIRef, Namespace
 from thefuzz import process, fuzz
 from rdflib.namespace import OWL, RDF, RDFS
 
 WD = Namespace("https://wiki.openstreetmap.org/entity/")
 WDT = Namespace("https://wiki.openstreetmap.org/prop/direct/")
+
+
 class TestKGMethods(unittest.TestCase):
 
     def setUp(self):
@@ -19,7 +21,6 @@ class TestKGMethods(unittest.TestCase):
         match = self.linking_func(example_wd)
 
         self.assertEqual(match, "fast food")
-
 
         example_wd = WD["Q6034"]
 
@@ -37,7 +38,6 @@ class TestKGMethods(unittest.TestCase):
         match, score = process.extract(name, list(candidate_labels), scorer=fuzz.token_set_ratio, limit=1)[0]
         return match
 
-
     def test_duplicates(self):
         osm_tag_uri_pairs = []
         for s, _, _ in self.g.triples((None, WDT["P2"], WD["Q2"])):
@@ -48,12 +48,10 @@ class TestKGMethods(unittest.TestCase):
         data = pd.DataFrame(osm_tag_uri_pairs)
         pair_count = len(data)
 
-
         self.assertEqual(len(data['uri'].unique()), len(data["osm_tag"].unique()))
         self.assertEqual(pair_count, len(data['uri'].unique()))
 
-
-        subj =  WD["Q6034"]
+        subj = WD["Q6034"]
         combinations = []
         for o in self.g.objects(subj, WDT["P46"]):
             obj_name = fetch_english_name(self.g, o)
@@ -69,6 +67,22 @@ class TestKGMethods(unittest.TestCase):
 
         self.assertEqual(len(data['uri'].unique()), len(data["osm_tag"].unique()))
         self.assertEqual(combination_count, len(data['uri'].unique()))
+
+    def test_descriptions(self):
+        test_tags = [{
+            "osm_tag": WD["Q4819"],
+            "descriptions": [
+                'amenity=restaurantis applied to generally formal eating places with sit-down facilities selling full meals served by waiters and often licensed (where allowed) to sell alcoholic drinks.',
+                'If the restaurant and a hotel is the same add another point and the corresponding properties. (SeeOne feature, one OSM element)',
+                'Set anodeor draw as anareaalong the restaurant outline. Tag it withamenity=restaurantandname=*.',
+                'A restaurant sells full sit-down meals with servers, and may sell alcohol.', 'Rare combinations:',
+                'If applicable:', 'Recommended:', 'Optional:']
+
+        }]
+
+        for test_tag in test_tags:
+            descriptions = fetch_descriptions(self.g, test_tag["osm_tag"])
+            assert test_tag["descriptions"] == descriptions
 
 
 if __name__ == '__main__':

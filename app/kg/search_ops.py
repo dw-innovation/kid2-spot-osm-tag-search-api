@@ -32,7 +32,7 @@ def fetch_all_osm_tags(g: Graph):
     for s, _, n in g.triples((None, WDT["P19"], None)):
         status = g.value(s, WDT["P6"])
         # don't add the deprecated value
-        if status== WD["Q5061"]:
+        if status == WD["Q5061"]:
             continue
         osm_tag_uri_pairs.add(str(s))
 
@@ -256,21 +256,24 @@ def fetch_wikidata_label(g, subj):
     return match
 
 
-def fetch_description(g, subj):
+def fetch_descriptions(g, subj):
     '''
-    fetch the english name of the object which might contain multiple names
+    fetch the english descriptions that are scraped from taginfo box and/or osm wiki descriptions
     :param g:
     :param o:
     :return:
     '''
     if isinstance(subj, str):
         subj = URIRef(subj)
-    description = None
+    descriptions = set()
     for o in g.objects(subj, SCHEMA.description):
         if o.language == 'en':
-            description = str(o)
-            break
-    return description
+            descriptions.add(str(o))
+    if len(descriptions) == 0:
+        return None
+
+    descriptions = list(descriptions)
+    return sorted(descriptions, key=len, reverse=True)
 
 
 if __name__ == '__main__':
