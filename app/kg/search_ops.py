@@ -30,6 +30,10 @@ def fetch_all_osm_tags(g: Graph):
     osm_tag_uri_pairs = set()
 
     for s, _, n in g.triples((None, WDT["P19"], None)):
+        status = g.value(s, WDT["P6"])
+        # don't add the deprecated value
+        if status== WD["Q5061"]:
+            continue
         osm_tag_uri_pairs.add(str(s))
 
     return osm_tag_uri_pairs

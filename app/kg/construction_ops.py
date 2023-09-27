@@ -179,7 +179,6 @@ def get_additional_values(input_file, output_file):
     g = _load_graph(input_file)
 
     for s, _, n in g.triples((None, WDT["P19"], None)):
-        print(f"Requesting {n}")
         wiki_description = scrape_osm_wiki_description(tag_info=n)
 
         if not wiki_description:
