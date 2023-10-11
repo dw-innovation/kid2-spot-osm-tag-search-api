@@ -38,7 +38,7 @@ def search_osm_tag(word, model, search_engine, limit):
 
 
 def construct_bm25_query(query):
-    return {"match": {"name": query}}
+    return {"match": {"description": query}}
 
 
 def construct_knn_query(query_vector):
