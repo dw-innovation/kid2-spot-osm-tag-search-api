@@ -9,7 +9,7 @@ from app.search_engine.utils import OSMTag, encode, load_model, connect_search_e
 
 load_dotenv()
 
-index_name = "test_predefined_table"
+index_name = "test_predefined_table_2"
 
 es = Elasticsearch(
     os.getenv("SEARCH_ENGINE_HOST"),  # Elasticsearch endpoint
@@ -70,7 +70,7 @@ def create_index(es, index_name, model):
         mappings=mappings
     )
 
-    with open('tests/search_data/synonym_json_test_v2.json') as json_file:
+    with open('tests/search_data/synonym_json_v3.json') as json_file:
         json_data = json.load(json_file)
 
     # descriptions = pd.read_csv("tests/search_data/Tag_List_v8.csv", sep=",")['description'].tolist()

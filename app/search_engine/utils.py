@@ -6,9 +6,11 @@ from docarray import BaseDoc
 from docarray.index.backends.elastic import ElasticDocIndex
 from pydantic import Field
 from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 
 load_dotenv()
 
+MANUAL_MAPPING = os.getenv('MANUAL_MAPPING')
 
 class OSMTag(BaseDoc):
     text: str
@@ -28,6 +30,13 @@ def load_model():
 def connect_search_engine():
     return ElasticDocIndex[OSMTag](hosts=os.getenv("SEARCH_ENGINE_HOST"),
                                    index_name=os.getenv("SEARCH_ENGINE_INDEX"))
+
+
+def search_engine_client():
+    return Elasticsearch(
+        os.getenv("SEARCH_ENGINE_HOST"),  # Elasticsearch endpoint
+
+    )
 
 
 def encode(text: str, model):

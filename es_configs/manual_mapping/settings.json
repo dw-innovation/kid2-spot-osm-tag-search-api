@@ -6,19 +6,9 @@
             "tokenizer":"standard",
             "filter":[
                "lowercase",
-               "synonym",
                "asciifolding",
                "snowball",
                "word_delimiter_graph"
-            ]
-         }
-      },
-      "filter":{
-         "synonym":{
-            "type":"synonym",
-            "lenient":true,
-            "synonyms":[
-               "cinema, movie theater"
             ]
          }
       }

@@ -57,6 +57,7 @@ def index_from_file(fpath, index_name, clear_index, config):
         keywords = row['applies_to'].split('|')
         description = " ".join(keyword.lower() for keyword in keywords)
         action = {"index": {"_index": index_name}}
+
         doc = {
             "name": keywords[0].lower(),
             "imr": row['imr'],
@@ -65,8 +66,8 @@ def index_from_file(fpath, index_name, clear_index, config):
         }
         actions.append(action)
         actions.append(doc)
-    es.bulk(index=index_name, operations=actions)
 
+    es.bulk(index=index_name, operations=actions)
     result = es.count(index=index_name)
     logger.info(f"{result.body['count']} tags indexed.")
 
