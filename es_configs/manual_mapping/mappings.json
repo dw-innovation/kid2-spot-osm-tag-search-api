@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "name": {
+      "type": "text",
+      "analyzer": "name_search"
+    },
+    "embeddings": {
+      "type": "dense_vector",
+      "dims": 768,
+      "index": "true",
+      "similarity": "cosine"
+    }
+  }
+}

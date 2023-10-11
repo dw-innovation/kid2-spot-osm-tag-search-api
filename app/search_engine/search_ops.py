@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 from docarray.typing import NdArray
-from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
+from search_engine.utils import OSMTag, encode, load_model, connect_search_engine
 from docarray import BaseDoc
 from pydantic import Field
 import pandas as pd
@@ -11,7 +11,7 @@ from docarray.index.backends.elastic import ElasticDocIndex
 
 def search_osm_tag(word, model, search_engine, limit):
     # find similar documents
-    q_embedding = encode(word, model)
+    # q_embedding = encode(word, model)
 
     q = (
         search_engine.build_query()
