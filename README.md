@@ -56,7 +56,7 @@ It is recomended to remove the previous index, so activate clear_index as True
 
 ### Clearing index
 
-`curl -X DELETE "[HOST]:9200/osm_tag?pretty"`
+`curl -X DELETE "[HOST]:9200/manual_mapping?pretty"`
 
 Alternatively detail description can be found
 at [link](https://deutschewelle.sharepoint.com/:w:/t/GR-GR-ReCo-KID2/EWZ2XjKlDiNLhLMUBKYVqukBvTDFrbU4AS_Pmb6OE9eQpw?e=LH5fyj)
