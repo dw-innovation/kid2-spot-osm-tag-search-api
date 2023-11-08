@@ -14,3 +14,4 @@ docarray[elasticsearch]==0.37.1
 python-dotenv==1.0.0
 elasticsearch==8.9.0
 loguru==0.7.2
+inflect==7.0.0

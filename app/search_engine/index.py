@@ -29,7 +29,6 @@ def index_from_file(fpath, index_name, clear_index, config):
     settings = read_config(config["settings"])
     mappings = read_config(config["mappings"])
 
-    # create index
     es.indices.create(
         index=index_name,
         settings=settings,
@@ -53,16 +52,17 @@ def index_from_file(fpath, index_name, clear_index, config):
     actions = []
 
     logger.info(f"Document indexing started.")
-    for idx, row in enumerate(tqdm(data, total=len(data))):
-        keywords = row['applies_to'].split('|')
-        description = " ".join(keyword.lower() for keyword in keywords)
+    for idx, key_value in enumerate(tqdm(data, total=len(data))):
+        imr = data[key_value]
+        name = key_value.lower()
+
         action = {"index": {"_index": index_name}}
 
         doc = {
-            "name": keywords[0].lower(),
-            "imr": row['imr'],
-            "description": description,
-            "embeddings": model.encode(description)
+            "name": name,
+            "imr": imr,
+            "description": name,
+            "embeddings": model.encode(name)
         }
         actions.append(action)
         actions.append(doc)

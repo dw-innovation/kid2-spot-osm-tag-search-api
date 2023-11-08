@@ -1,7 +1,7 @@
 echo indexing manual mappings
 
-INDEX_NAME=manual_mapping
-MANUAL_MAPPINGS="tests/search_data/synonym_json_v3.json"
+INDEX_NAME=manual_mapping_v3
+MANUAL_MAPPINGS="tests/search_data/imr-tag-db_v1.json"
 CONFIG_SETTINGS="es_configs/manual_mapping/settings.json"
 CONFIG_MAPPINGS="es_configs/manual_mapping/mappings.json"
 

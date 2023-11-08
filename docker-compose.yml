@@ -5,13 +5,14 @@ services:
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xmx1024m
+      - ES_JAVA_OPTS=-Xmx4g
+      - cluster.routing.allocation.disk.threshold_enabled=false
     ports:
       - "9200:9200"
     networks:
       - elastic
-    volumes:
-      - ./es_data:/usr/share/elasticsearch/data
+#    volumes:
+#      - ./es_data:/usr/share/elasticsearch/data
     user: 1000:1000
 
 networks:
