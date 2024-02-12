@@ -54,6 +54,17 @@ bash scripts/index_manual_mapping.sh
 
 It is recomended to remove the previous index, so activate clear_index as True
 
+## Checking Duplicates
+It is important that tag-imr file should not contain duplicate entries. Run the following code to check the duplicates:
+
+```shell
+python -m app.search_engine.check_duplicates \
+--input_file {e.g. imr-tag-db_v2.jsonl} \
+--output_file duplicates.txt
+```
+
+If `duplicates.txt` is not empty, contact with the data providers at the team.
+
 ### Clearing index
 
 `curl -X DELETE "[HOST]:9200/manual_mapping?pretty"`
