@@ -40,8 +40,8 @@ def index_from_file(fpath, index_name, clear_index, config):
 
     logger.info(f"Loading data at {fpath}")
 
-    with open(fpath) as json_file:
-        data = json.load(json_file)
+    with open(fpath, 'r') as json_file:
+        data = list(json_file)
 
     logger.info(f"Data loaded. It has {len(data)} entries.")
 
@@ -52,9 +52,10 @@ def index_from_file(fpath, index_name, clear_index, config):
     actions = []
 
     logger.info(f"Document indexing started.")
-    for idx, key_value in enumerate(tqdm(data, total=len(data))):
-        imr = data[key_value]
-        name = key_value.lower()
+    for row in tqdm(data, total=len(data)):
+        row = json.loads(row)
+        imr = row['imr']
+        name = row['keyword'].strip().lower()
 
         action = {"index": {"_index": index_name}}
 
