@@ -54,6 +54,14 @@ bash scripts/index_manual_mapping.sh
 
 It is recomended to remove the previous index, so activate clear_index as True
 
+To validate indexing, run the following command by changing the index_name and synonyms values accordingly:
+```shell
+python -m tests.validation.index_validation \
+--index_name manual_mapping_v4 \
+--synonyms tests/search_data/imr-tag-db_v2.jsonl \
+--validate singular
+```
+
 ## Checking Duplicates
 It is important that tag-imr file should not contain duplicate entries. Run the following code to check the duplicates:
 
