@@ -65,8 +65,7 @@ python -m tests.validation.index_validation \
 To check osm tags whether they are correctly defined.
 ```shell
 python -m tests.validation.osm_tag_validation \
---input_file {e.g. imr-tag-db_v2.jsonl} \
---output_file incorrectly_defined_osm_tags.txt
+--input_file {e.g. imr-tag-db_v2.jsonl} >> incorrectly_defined_osm_tags.txt
 ```
 
 
