@@ -62,6 +62,14 @@ python -m tests.validation.index_validation \
 --validate singular
 ```
 
+To check osm tags whether they are correctly defined.
+```shell
+python -m tests.validation.osm_tag_validation \
+--input_file {e.g. imr-tag-db_v2.jsonl} \
+--output_file incorrectly_defined_osm_tags.txt
+```
+
+
 ## Checking Duplicates
 It is important that tag-imr file should not contain duplicate entries. Run the following code to check the duplicates:
 
