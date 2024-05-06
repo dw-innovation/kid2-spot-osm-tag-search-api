@@ -1,13 +1,14 @@
 import json
-from argparse import ArgumentParser
-from loguru import logger
 import os
+from argparse import ArgumentParser
+
 import pandas as pd
-from tqdm import tqdm
-from elasticsearch import Elasticsearch
-from dotenv import load_dotenv
-from elasticsearch import helpers
 from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
+from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers
+from loguru import logger
+from tqdm import tqdm
 
 
 def read_config(config_path):
@@ -19,7 +20,7 @@ def read_config(config_path):
 def index_from_file(fpath, index_name, clear_index, config):
     es = Elasticsearch(
         os.getenv("SEARCH_ENGINE_HOST"),  # Elasticsearch endpoint
-
+        request_timeout = 30
     )
 
     if clear_index:
