@@ -20,7 +20,7 @@ def read_config(config_path):
 def index_from_file(fpath, index_name, clear_index, config):
     es = Elasticsearch(
         os.getenv("SEARCH_ENGINE_HOST"),  # Elasticsearch endpoint
-        request_timeout = 30
+        request_timeout = 120
     )
 
     if clear_index:
@@ -51,12 +51,12 @@ def index_from_file(fpath, index_name, clear_index, config):
     logger.info(f"ML model is loaded.")
 
     actions = []
-
+    batch_size = 500
     logger.info(f"Document indexing started.")
     for row in tqdm(data, total=len(data)):
         row = json.loads(row)
         imr = row['imr']
-        name = row['keyword'].strip().lower()
+        name = row['key'].strip().lower()
 
         action = {"index": {"_index": index_name}}
 
@@ -69,7 +69,11 @@ def index_from_file(fpath, index_name, clear_index, config):
         actions.append(action)
         actions.append(doc)
 
-    es.bulk(index=index_name, operations=actions)
+        if len(actions) == batch_size:
+            es.bulk(index=index_name, operations=actions)
+            actions.clear()
+    if len(actions) > 0:
+        es.bulk(index=index_name, operations=actions)
     result = es.count(index=index_name)
     logger.info(f"{result.body['count']} tags indexed.")
 
