@@ -45,21 +45,21 @@ def construct_knn_query(query_vector):
     return {
         "field": "embeddings",
         "query_vector": query_vector,
-        "k": 1,
-        "num_candidates": 10
+        "k": 10,
+        "num_candidates": 100
     }
 
 
-def search_manual_mapping(word, client, model, index_name, confidence=0.79, limit=1):
+def search_manual_mapping(word, client, model, index_name, confidence=0.5, limit=1):
     query_vector = model.encode(word)
-    resp = client.search(index=index_name, query=construct_bm25_query(query=word),
+    resp = client.search(index=index_name,
+                         query=construct_bm25_query(query=word),
                          knn=construct_knn_query(query_vector),
                          source=["imr", "name"])
 
     num_docs = resp['hits']['total']['value']
-
     if num_docs == 0:
-        logger.info("No document is matched")
+        print("No document is matched")
         return []
 
     else:

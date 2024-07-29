@@ -11,8 +11,8 @@ services:
       - "9200:9200"
     networks:
       - elastic
-    volumes:
-      - ./es_data:/usr/share/elasticsearch/data
+#    volumes:
+#      - ./es_data:/usr/share/elasticsearch/data
     user: 1000:1000
 
 networks:

@@ -17,8 +17,8 @@ def construct_knn_query(query_vector):
     return {
         "field": "embeddings",
         "query_vector": query_vector,
-        "k": 2,
-        "num_candidates": 10
+        "k": 10,
+        "num_candidates": 100
     }
 
 
@@ -87,7 +87,7 @@ def plural_match(data):
     err = 0
     for idx, row in enumerate(tqdm(data, total=len(data))):
         row = json.loads(row)
-        name = row["keyword"].lower()
+        name = row["key"].lower()
         expected_query = row["imr"]
         keyword = p.plural_noun(name)
 
