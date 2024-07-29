@@ -11,6 +11,7 @@ from elasticsearch import Elasticsearch
 load_dotenv()
 
 MANUAL_MAPPING = os.getenv('MANUAL_MAPPING')
+SEARCH_CONFIDENCE = float(os.getenv('SEARCH_CONFIDENCE'))
 
 class OSMTag(BaseDoc):
     text: str
