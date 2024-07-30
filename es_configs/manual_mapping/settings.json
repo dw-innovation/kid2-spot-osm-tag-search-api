@@ -1,51 +1,16 @@
 {
-  "analysis": {
-    "tokenizer": {
-      "edge_ngram_tokenizer": {
-        "type": "edge_ngram",
-        "min_gram": 2,
-        "max_gram": 15,
-        "token_chars": [
-          "letter",
-          "digit"
-        ]
+   "analysis":{
+      "analyzer":{
+         "name_search":{
+            "type":"custom",
+            "tokenizer":"standard",
+            "filter":[
+               "lowercase",
+               "asciifolding",
+               "snowball",
+               "word_delimiter_graph"
+            ]
+         }
       }
-    },
-    "filter": {
-      "bigram_filter": {
-        "type": "shingle",
-        "min_shingle_size": 2,
-        "max_shingle_size": 2,
-        "output_unigrams": false
-      },
-      "trigram_filter": {
-        "type": "shingle",
-        "min_shingle_size": 3,
-        "max_shingle_size": 3,
-        "output_unigrams": false
-      },
-      "custom_stop": {
-        "type": "stop",
-        "stopwords": "_english_"
-      },
-      "stemmer": {
-        "type": "stemmer",
-        "name": "english"
-      }
-    },
-    "analyzer": {
-      "name_search": {
-        "type": "custom",
-        "tokenizer": "edge_ngram_tokenizer",
-        "filter": [
-          "lowercase",
-          "asciifolding",
-          "stemmer",
-          "bigram_filter",
-          "trigram_filter",
-          "custom_stop"
-        ]
-      }
-    }
-  }
+   }
 }
