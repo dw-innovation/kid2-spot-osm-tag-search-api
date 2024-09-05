@@ -29,7 +29,7 @@ To validate indexing, run the following command by changing the index_name and s
 ```shell
 python -m tests.validation.index_validation \
 --index_name manual_mapping_v4 \
---synonyms tests/search_data/imr-tag-db_v2.jsonl \
+--synonyms tests/search_data/imr-tag-search-indices.jsonl \
 --validate singular
 ```
 
