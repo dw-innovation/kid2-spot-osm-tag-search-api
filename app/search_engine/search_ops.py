@@ -26,7 +26,8 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.5, limit
     resp = client.search(index=index_name,
                          query=construct_bm25_query(query=word),
                          knn=construct_knn_query(query_vector),
-                         source=["imr", "name"])
+                         source=["imr", "name"],
+                         request_timeout=30)
 
     num_docs = resp['hits']['total']['value']
     if num_docs == 0:

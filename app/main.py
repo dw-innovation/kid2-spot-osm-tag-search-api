@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from search_engine.search_ops import search_osm_tag, search_manual_mapping
+from search_engine.search_ops import search_manual_mapping
 from search_engine.utils import search_engine_client, load_model, MANUAL_MAPPING, SEARCH_CONFIDENCE
 
 app = FastAPI()

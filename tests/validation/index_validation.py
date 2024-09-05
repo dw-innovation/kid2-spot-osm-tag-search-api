@@ -28,7 +28,8 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.79, limi
     query_vector = model.encode(word)
     resp = client.search(index=index_name, query=construct_bm25_query(query=word),
                          knn=construct_knn_query(query_vector),
-                         source=["imr", "name"])
+                         source=["imr", "name"],
+                         timeout="60s")
 
     num_docs = resp['hits']['total']['value']
 
@@ -58,8 +59,7 @@ def one_to_one_match(data):
     err = 0
     for idx, row in enumerate(tqdm(data, total=len(data))):
         row = json.loads(row)
-        name = row["keyword"].lower()
-
+        name = row["key"].lower()
         if len(name) == 0:
             continue
 
