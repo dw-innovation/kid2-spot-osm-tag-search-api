@@ -2,8 +2,8 @@ from typing import Dict, List
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from search_engine.search_ops import search_manual_mapping
-from search_engine.utils import search_engine_client, load_model, MANUAL_MAPPING, SEARCH_CONFIDENCE
+from search_engine.search_ops import search_manual_mapping, search_color_mapping
+from search_engine.utils import search_engine_client, load_model, MANUAL_MAPPING, SEARCH_CONFIDENCE, COLOR_MAPPING
 
 app = FastAPI()
 
@@ -32,3 +32,10 @@ def func_search_in_manual_mapping(word: str, limit: int):
                                  limit=limit,
                                  confidence=SEARCH_CONFIDENCE,
                                  index_name=MANUAL_MAPPING)
+
+@app.get("/color_mapping")
+def func_color_mapping(color:str):
+    return search_color_mapping(word=color,
+                                client=SEARCH_ENGINE,
+                                index_name=COLOR_MAPPING,
+                                limit=1)
