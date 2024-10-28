@@ -1,6 +1,6 @@
 echo indexing manual mappings
 
-INDEX_NAME=manual_mapping_v4
+INDEX_NAME=manual_mapping_v5
 MANUAL_MAPPINGS="datasets/imr-tag-search-indices.jsonl"
 CONFIG_SETTINGS="es_configs/manual_mapping/settings.json"
 CONFIG_MAPPINGS="es_configs/manual_mapping/mappings.json"
