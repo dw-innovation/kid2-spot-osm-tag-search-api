@@ -1,13 +1,3 @@
-from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
-from docarray.typing import NdArray
-from search_engine.utils import OSMTag, encode, load_model, connect_search_engine, search_engine_client
-from docarray import BaseDoc
-from pydantic import Field
-import pandas as pd
-import numpy as np
-from docarray.index.backends.elastic import ElasticDocIndex
-
 def construct_bm25_query(query):
     return {"match": {"name": query}}
 
@@ -50,3 +40,20 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.5, limit
             })
 
         return search_results
+
+def search_color_mapping(word, client, index_name, limit=1):
+    resp = client.search(index=index_name,
+                         query=construct_bm25_query(query=word),
+                         source=["name", "color_values"],
+                         request_timeout=30)
+
+    num_docs = resp['hits']['total']['value']
+    if num_docs == 0:
+        print("No document is matched")
+        return None
+    else:
+        result = resp['hits']['hits'][:limit][0]
+        return {
+            "name":  result['_source']['name'],
+            "color_values": result['_source']["color_values"],
+        }

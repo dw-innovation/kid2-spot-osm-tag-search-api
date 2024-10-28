@@ -12,6 +12,7 @@ load_dotenv()
 
 MANUAL_MAPPING = os.getenv('MANUAL_MAPPING')
 SEARCH_CONFIDENCE = float(os.getenv('SEARCH_CONFIDENCE'))
+COLOR_MAPPING = os.getenv('COLOR_MAPPING')
 
 class OSMTag(BaseDoc):
     text: str

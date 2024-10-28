@@ -1,13 +1,8 @@
 from app.kg.search_ops import fetch_all_osm_tags, fetch_descriptions, fetch_osm_tag, fetch_plain_name
 from app.kg.utils import load_graph
 from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
-from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-from docarray.typing import NdArray
-from docarray import BaseDoc
-from docarray.index.backends.elastic import ElasticDocIndex
-from pydantic import Field
-import pandas as pd
+
 
 g = load_graph()
 
