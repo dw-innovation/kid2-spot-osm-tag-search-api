@@ -22,7 +22,7 @@ if __name__ == '__main__':
     duplicates = set()
     for imr_tag in tqdm(imr_tag_db, total=len(imr_tag_db)):
         imr_tag = json.loads(imr_tag)
-        keyword = imr_tag['keyword'].lower().strip()
+        keyword = imr_tag['key'].lower().strip()
 
         if keyword in processed_data:
             duplicates.add(keyword)
