@@ -11,13 +11,40 @@ from loguru import logger
 from tqdm import tqdm
 
 
-def read_config(config_path):
+def read_config(config_path: str) -> dict:
+    """
+    Load a JSON configuration file.
+
+    Args:
+        config_path (str): Path to the JSON config file.
+
+    Returns:
+        dict: Parsed JSON configuration as a dictionary.
+    """
     with open(config_path) as f:
         config = json.load(f)
     return config
 
 
-def index_from_file(fpath, index_name, clear_index, config):
+def index_from_file(fpath: str, index_name: str, clear_index: bool, config: dict):
+    """
+    Indexes documents from a file into an Elasticsearch index.
+
+    Args:
+        fpath (str): Path to the input JSONL file (one JSON object per line).
+        index_name (str): Name of the Elasticsearch index to use/create.
+        clear_index (bool): Whether to delete and recreate the index before indexing.
+        config (dict): Configuration dictionary with keys:
+                       - 'settings': Path to index settings JSON file.
+                       - 'mappings': Path to index mappings JSON file.
+
+    Behavior:
+        - Optionally deletes the existing index.
+        - Creates a new index with provided settings and mappings.
+        - Reads input data from file.
+        - Encodes document names using a loaded ML model.
+        - Indexes the documents in batches.
+    """
     es = Elasticsearch(
         os.getenv("SEARCH_ENGINE_HOST"),  # Elasticsearch endpoint
         request_timeout = 120
@@ -79,6 +106,7 @@ def index_from_file(fpath, index_name, clear_index, config):
 
 
 if __name__ == '__main__':
+    # CLI argument parser for running the script
     parser = ArgumentParser()
     parser.add_argument("--index_manual_mappings", action="store_true")
     parser.add_argument("--index_name", type=str)

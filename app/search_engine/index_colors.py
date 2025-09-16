@@ -8,6 +8,7 @@ import pandas as pd
 load_dotenv()
 
 if __name__ == '__main__':
+    # Name of the Elasticsearch index to create/populate
     index_name = 'color_mappings'
 
     es = Elasticsearch(
@@ -15,6 +16,7 @@ if __name__ == '__main__':
         request_timeout = 120
     )
 
+    # Define the index mapping (structure of stored documents)
     index_body = {
         "mappings": {
             "properties": {

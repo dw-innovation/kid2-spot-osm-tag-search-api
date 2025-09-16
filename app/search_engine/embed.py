@@ -3,18 +3,23 @@ from app.kg.utils import load_graph
 from app.search_engine.utils import OSMTag, encode, load_model, connect_search_engine
 from tqdm import tqdm
 
-
+# Load the knowledge graph containing OSM tag information
 g = load_graph()
 
+# Retrieve all OSM tag URIs from the graph
 osm_tags = fetch_all_osm_tags(g)
 
+# Load embedding model for encoding text
 model = load_model()
 
+# Connect to the search engine index (e.g., Elasticsearch)
 doc_index = connect_search_engine()
 print("Connected to the search engine.")
 
 BATCH = 100
 processed_doc = []
+
+# Process and index each OSM tag into the search engine
 for osm_tag in tqdm(osm_tags, total=len(osm_tags)):
     descriptions = fetch_descriptions(g, osm_tag)
 
@@ -27,9 +32,16 @@ for osm_tag in tqdm(osm_tags, total=len(osm_tags)):
     description_embedding = encode(descriptions, model)
     name_embedding = encode(plain_name, model)
 
+    # Create OSMTag document object with metadata and embeddings
     processed_doc.append(
-        OSMTag(uri=osm_tag, text=descriptions, description_embedding=description_embedding, osm_tag=osm_tag_name,
-               name_embedding=name_embedding, name=plain_name))
+        OSMTag(uri=osm_tag,
+               text=descriptions,
+               description_embedding=description_embedding,
+               osm_tag=osm_tag_name,
+               name_embedding=name_embedding,
+               name=plain_name
+        )
+    )
 
     if len(processed_doc) >= BATCH:
         doc_index.index(processed_doc)

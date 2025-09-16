@@ -9,11 +9,29 @@ from loguru import logger
 from tqdm import tqdm
 
 
-def construct_bm25_query(query):
+def construct_bm25_query(query: str) -> dict:
+    """
+    Build a BM25 match query on the `name` field.
+
+    Args:
+        query (str): The raw search string.
+
+    Returns:
+        dict: Elasticsearch-compatible query body that matches `name` using BM25.
+    """
     return {"match": {"name": query}}
 
 
-def construct_knn_query(query_vector):
+def construct_knn_query(query_vector) -> dict:
+    """
+    Build a k‑NN (vector) search clause.
+
+    Args:
+        query_vector (List[float]): Embedding for the query text.
+
+    Returns:
+        dict: Elasticsearch kNN block (for use alongside a lexical query).
+    """
     return {
         "field": "embeddings",
         "query_vector": query_vector,
@@ -22,7 +40,22 @@ def construct_knn_query(query_vector):
     }
 
 
-def search_manual_mapping(word, client, model, index_name, confidence=0.79, limit=1):
+def search_manual_mapping(word: str, client, model, index_name: str, confidence: float = 0.79, limit: int = 1):
+    """
+    Hybrid search (BM25 + k‑NN) against a manual OSM mapping index.
+
+    Args:
+        word (str): Query string to search for.
+        client: Elasticsearch client instance.
+        model: Embedding model with an `.encode(text)` method.
+        index_name (str): Name of the target index.
+        confidence (float, optional): Minimum score threshold to include a hit. Defaults to 0.79.
+        limit (int, optional): Max number of results to return. Defaults to 1.
+
+    Returns:
+        List[dict]: Up to `limit` results with keys: `imr`, `name`, `score`.
+                    Returns an empty list if no documents match or pass the threshold.
+    """
     logger.info(f"Querying {word}")
 
     query_vector = model.encode(word)
@@ -56,6 +89,21 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.79, limi
 
 
 def one_to_one_match(data):
+    """
+    Validate that each singular key maps 1:1 to its expected IMR.
+
+    Args:
+        data (Iterable[str]): Iterable of JSON lines where each line includes:
+                              - "key" (str): the term to query
+                              - "imr" (str): the expected mapping
+
+    Side Effects:
+        Prints mismatches and a final error count summary.
+
+    Notes:
+        This function calls the search for each entry and checks equality with the
+        expected IMR. It skips empty keys.
+    """
     err = 0
     for idx, row in enumerate(tqdm(data, total=len(data))):
         row = json.loads(row)
@@ -83,6 +131,20 @@ def one_to_one_match(data):
 
 
 def plural_match(data):
+    """
+    Validate that pluralized forms of each key still map to the same expected IMR.
+
+    Args:
+        data (Iterable[str]): Iterable of JSON lines where each line includes:
+                              - "key" (str): the singular term
+                              - "imr" (str): the expected mapping
+
+    Side Effects:
+        Prints mismatches and a final error count summary.
+
+    Notes:
+        Uses the `inflect` library to pluralize nouns before querying.
+    """
     p = inflect.engine()
     err = 0
     for idx, row in enumerate(tqdm(data, total=len(data))):
@@ -107,7 +169,6 @@ def plural_match(data):
             err += 1
             continue
     print(f"Number of mismatch is {err}")
-
 
 if __name__ == '__main__':
     parser = ArgumentParser()
