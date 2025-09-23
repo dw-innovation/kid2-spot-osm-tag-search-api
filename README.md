@@ -1,3 +1,5 @@
+<img width="1280" height="200" alt="Github-Banner_spot" src="https://github.com/user-attachments/assets/f65c5d8e-0260-46a4-b0cc-6ebe5c35deff" />
+
 # OSM Tag Search
 
 The repository contains the source code of the steps for the tag search engine.
