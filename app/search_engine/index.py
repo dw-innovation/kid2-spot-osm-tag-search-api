@@ -84,14 +84,18 @@ def index_from_file(fpath: str, index_name: str, clear_index: bool, config: dict
         row = json.loads(row)
         imr = row['imr']
         name = row['key'].strip().lower()
+        cluster_id = row['cluster_id']
+        descriptors = row['descriptors']
 
         action = {"index": {"_index": index_name}}
 
         doc = {
             "name": name,
             "imr": imr,
+            "cluster_id": cluster_id,
             "description": name,
-            "embeddings": model.encode(name)
+            "embeddings": model.encode(name),
+            "descriptors": descriptors
         }
         actions.append(action)
         actions.append(doc)

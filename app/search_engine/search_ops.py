@@ -51,7 +51,7 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.5, limit
     resp = client.search(index=index_name,
                          query=construct_bm25_query(query=word),
                          knn=construct_knn_query(query_vector),
-                         source=["imr", "name"],
+                         source=["imr", "name", "cluster_id", "descriptors"],
                          request_timeout=30)
 
     num_docs = resp['hits']['total']['value']
@@ -70,8 +70,10 @@ def search_manual_mapping(word, client, model, index_name, confidence=0.5, limit
 
             search_results.append({
                 'imr': result['_source']['imr'],
+                'cluster_id': result['_source']['cluster_id'],
                 "name": result['_source']['name'],
                 "score": result['_score'],
+                'descriptors': result['_source']['descriptors']
             })
 
         return search_results
